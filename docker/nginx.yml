@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro # SSL certificates
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - ceitba-api
+      # - ceitba-scheduler
+      # - ceitba-hub
+      # - ceitba-itbapedia
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: 3
+
+network:
+  app-network:
+    external: true # Shared network

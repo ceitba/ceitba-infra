@@ -1,0 +1,50 @@
+# Api, CEITBA Scheduler, Hub, etc.
+# docker/apps.yml
+version: "3.8"
+
+services:
+  ceitba-api:
+    image: ghcr.io/ceitba/ceitba-api:${CEITBA_API_TAG:-latest}
+    container_name: ceitba-api
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ceitba-scheduler:
+  #   image: ghcr.io/ceitba/scheduler:${CEITBA_SCHEDULER_TAG:-latest}
+  #   container_name: ceitba-scheduler
+  #   ports:
+  #     - "3002:80"
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+
+  # TODO: Add missing SPAs
+  appsmith:
+    image: appsmith/appsmith-ce:latest
+    container_name: appsmith
+    ports:
+      - "3005:80"
+    volumes:
+      - appsmith_data:/appsmith-stacks
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  appsmith_data:
+
+networks:
+  app-network:
+    external: true
