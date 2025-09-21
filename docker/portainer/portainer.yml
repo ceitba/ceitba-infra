@@ -1,0 +1,42 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - portainer_data:/data
+      - ./config:/config:ro
+      # IMPORTANT: Limit Docker socket access to specific contexts
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - PORTAINER_ADMIN_PASSWORD=${PORTAINER_ADMIN_PASSWORD}
+    command: >
+      --admin-password "${PORTAINER_ADMIN_PASSWORD}"
+      --bind :9000
+      --data /data
+      --hide-label com.docker.compose.project!=ceitba-infra
+    networks:
+      - app-network
+    restart: unless-stopped
+    labels:
+      - "com.docker.compose.project=ceitba-infra"
+
+  portainer-agent:
+    image: portainer/agent:latest
+    container_name: portainer-agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    environment:
+      - AGENT_CLUSTER_ADDR=portainer-agent
+      - AGENT_PORT=9001
+      - LOG_LEVEL=INFO
+    networks:
+      - app-network
+    restart: unless-stopped
+    labels:
+      - "com.docker.compose.project=ceitba-infra"
+
+volumes:
+  portainer_data:

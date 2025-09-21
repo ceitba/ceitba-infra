@@ -1,0 +1,12 @@
+{
+  "stacks": [
+    {
+      "name": "ceitba-full-stack",
+      "type": "compose",
+      "repositoryURL": "https://github.com/ceitba/ceitba-infra",
+      "repositoryReferenceName": "main",
+      "composeFile": "docker/apps.yml",
+      "note": "Environment variables will be loaded from .env file in repository"
+    }
+  ]
+}
