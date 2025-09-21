@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   nginx:
     image: nginx:alpine
@@ -13,17 +11,17 @@ services:
     restart: unless-stopped
     networks:
       - app-network
-    depends_on:
-      - ceitba-api
-      # - ceitba-scheduler
-      # - ceitba-hub
-      # - ceitba-itbapedia
+    # depends_on:
+    # - ceitba-api  # Moved to apps.yml
+    # - ceitba-scheduler
+    # - ceitba-hub
+    # - ceitba-itbapedia
     logging:
       driver: json-file
       options:
         max-size: 10m
         max-file: 3
 
-network:
+networks:
   app-network:
     external: true # Shared network

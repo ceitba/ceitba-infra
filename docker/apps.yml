@@ -1,15 +1,19 @@
 # Api, CEITBA Scheduler, Hub, etc.
-# docker/apps.yml
-version: "3.8"
 
 services:
   ceitba-api:
     image: ghcr.io/ceitba/ceitba-api:${CEITBA_API_TAG:-latest}
+    platform: linux/amd64
     container_name: ceitba-api
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
+      - ITBA_API_TOKEN=${ITBA_API_TOKEN}
+      - ITBA_API_BASE_URL=${ITBA_API_BASE_URL}
+      - ITBA_API_TIMEOUT=${ITBA_API_TIMEOUT:-30000}
+      - POSTGRES_DB=${POSTGRES_DB:-ceitba_db} # check if needed
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password} # check if needed
+
     ports:
       - "3000:3000"
     networks:

@@ -1,6 +1,4 @@
 # Portainer, Watchtower
-version: "3.8"
-
 services:
   portainer:
     image: portainer/portainer-ce:latest
