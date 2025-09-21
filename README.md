@@ -1,14 +1,17 @@
 # ceitba-infra
 CEITBA Infrastructure and orchestration for all services
 
-To generate a jwt, run the following command:
-```
+## Generate Secure Keys
+
+To generate secure encryption keys for Appsmith and other services:
+
+```bash
+# For JWT tokens and general encryption
 openssl rand -base64 32
-```
 
-Please ensure you have docker installed and running.
+# For Appsmith encryption password (32 chars)
+openssl rand -base64 32
 
-To run locally all services run:
-```
-./scripts/start-all.sh
+# For Appsmith encryption salt (16 chars)
+openssl rand -hex 16
 ```
