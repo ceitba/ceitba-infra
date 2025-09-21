@@ -2,52 +2,32 @@
 
 services:
   ceitba-api:
-    image: ghcr.io/ceitba/ceitba-api:${CEITBA_API_TAG:-latest}
-    platform: linux/amd64
-    container_name: ceitba-api
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - ITBA_API_TOKEN=${ITBA_API_TOKEN}
-      - ITBA_API_BASE_URL=${ITBA_API_BASE_URL}
-      - ITBA_API_TIMEOUT=${ITBA_API_TIMEOUT:-30000}
-      - POSTGRES_DB=${POSTGRES_DB:-ceitba_db} # check if needed
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password} # check if needed
-
-    ports:
-      - "3000:3000"
+    extends:
+      file: api/api-base.yml
+      service: ceitba-api-base
     networks:
       - app-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    container_name: ceitba-api
 
-  # ceitba-scheduler:
-  #   image: ghcr.io/ceitba/scheduler:${CEITBA_SCHEDULER_TAG:-latest}
-  #   container_name: ceitba-scheduler
-  #   ports:
-  #     - "3002:80"
-  #   networks:
-  #     - app-network
-  #   restart: unless-stopped
+  postgres:
+    extends:
+      file: api/api-base.yml
+      service: postgres
+    networks:
+      - app-network
+    container_name: ceitba-db
 
   # TODO: Add missing SPAs
+
   appsmith:
-    image: appsmith/appsmith-ce:latest
-    container_name: appsmith
-    ports:
-      - "3005:80"
-    volumes:
-      - appsmith_data:/appsmith-stacks
-    networks:
-      - app-network
-    restart: unless-stopped
+    extends:
+      file: appsmith/appsmith.yml
+      service: appsmith
 
 volumes:
   appsmith_data:
+  postgres_data:
+    driver: local
 
 networks:
   app-network:
