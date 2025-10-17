@@ -5,6 +5,7 @@ echo "Cleaning up orphaned containers..."
 # docker-compose --env-file .env -f docker/nginx.yml down --remove-orphans 2>/dev/null || true
 docker-compose --env-file .env -f docker/management.yml down --remove-orphans 2>/dev/null || true
 docker-compose --env-file .env -f docker/apps.yml down --remove-orphans 2>/dev/null || true
+docker-compose --env-file .env -f docker/nginx.yml down --remove-orphans 2>/dev/null || true
 
 echo "Creating shared network..."
 docker network create app-network 2>/dev/null || true
@@ -16,6 +17,12 @@ docker-compose --env-file .env -f docker/management.yml up -d
 echo "Deploying applications..."
 docker-compose --env-file .env -f docker/apps.yml up -d
 
+echo "Setting up SSL certificates..."
+bash nginx/setup-ssl.sh
+
+echo "Deploying nginx..."
+docker-compose --env-file .env -f docker/nginx.yml up -d
+
 echo "Waiting for services to be healthy..."
 sleep 30
 
@@ -23,5 +30,3 @@ echo "Checking service health..."
 curl -f http://localhost/health || echo "API health check failed"
 
 echo "Deployment complete!"
-echo "Services available at:"
-echo "- Portainer: http://localhost:9000"
