@@ -2,21 +2,25 @@ services:
   nginx:
     image: nginx:alpine
     container_name: ceitba-nginx
+    environment:
+      - SSL_DOMAIN=${SSL_DOMAIN:-localhost}
+      - SERVER_NAME=${SERVER_NAME:-localhost}
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/sites-enabled:/etc/nginx/sites-enabled:ro
-      - ./nginx/snippets:/etc/nginx/snippets:ro
-      - ./nginx/mime.types:/etc/nginx/mime.types:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro # SSL certificates
-      - /var/www/certbot:/var/www/certbot:ro # Certbot webroot
+      # TODO: Ver si es buen estilo
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../nginx/templates:/etc/nginx/templates:ro # Template directory (nginx will auto-process)
+      - ../nginx/snippets:/etc/nginx/snippets:ro
+      - ../nginx/mime.types:/etc/nginx/mime.types:ro
+      - ../nginx/ssl:/etc/nginx/ssl # SSL directory (writable for setup script)
+      - ../nginx/setup-ssl.sh:/docker-entrypoint.d/40-setup-ssl.sh:ro # Auto-run SSL setup
+      - /etc/letsencrypt:/etc/letsencrypt:ro # Production SSL certificates (optional)
+      - /var/www/certbot:/var/www/certbot:ro # Certbot webroot (optional)
     restart: unless-stopped
     networks:
       - app-network
-    depends_on:
-      - ceitba-api # Ensure API starts before nginx
     healthcheck:
       test: ["CMD", "nginx", "-t"]
       interval: 30s

@@ -2,7 +2,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name localhost;
+    server_name ${SERVER_NAME};
 
     # Allow Let's Encrypt challenges
     location /.well-known/acme-challenge/ {
@@ -21,7 +21,7 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     http2 on;
-    server_name localhost;
+    server_name ${SERVER_NAME};
 
     # SSL certificates (auto-detected: Let's Encrypt in prod, self-signed in dev)
     ssl_certificate /etc/nginx/ssl/cert.crt;
