@@ -27,6 +27,6 @@ echo "Waiting for services to be healthy..."
 sleep 30
 
 echo "Checking service health..."
-curl -f http://localhost/health || echo "API health check failed"
+curl -f http://localhost/api/health || echo "API health check failed"
 
 echo "Deployment complete!"
