@@ -2,26 +2,26 @@
 
 echo "Cleaning up orphaned containers..."
 # Add nginx when we need reverse proxy/gw.
-# docker-compose --env-file .env -f docker/nginx.yml down --remove-orphans 2>/dev/null || true
-docker-compose --env-file .env -f docker/management.yml down --remove-orphans 2>/dev/null || true
-docker-compose --env-file .env -f docker/apps.yml down --remove-orphans 2>/dev/null || true
-docker-compose --env-file .env -f docker/nginx.yml down --remove-orphans 2>/dev/null || true
+# docker compose --env-file .env -f docker/nginx.yml down --remove-orphans 2>/dev/null || true
+docker compose --env-file .env -f docker/management.yml down --remove-orphans 2>/dev/null || true
+docker compose --env-file .env -f docker/apps.yml down --remove-orphans 2>/dev/null || true
+docker compose --env-file .env -f docker/nginx.yml down --remove-orphans 2>/dev/null || true
 
 echo "Creating shared network..."
 docker network create app-network 2>/dev/null || true
 
 echo "Deploying infrastructure services..."
-# docker-compose --env-file .env -f docker/nginx.yml up -d
-docker-compose --env-file .env -f docker/management.yml up -d
+# docker compose --env-file .env -f docker/nginx.yml up -d
+docker compose --env-file .env -f docker/management.yml up -d
 
 echo "Deploying applications..."
-docker-compose --env-file .env -f docker/apps.yml up -d
+docker compose --env-file .env -f docker/apps.yml up -d
 
 echo "Setting up SSL certificates..."
 bash nginx/setup-ssl.sh
 
 echo "Deploying nginx..."
-docker-compose --env-file .env -f docker/nginx.yml up -d
+docker compose --env-file .env -f docker/nginx.yml up -d
 
 echo "Waiting for services to be healthy..."
 sleep 30
