@@ -1,21 +1,27 @@
 services:
   nginx:
     image: nginx:alpine
+    container_name: ceitba-nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - ./nginx/mime.types:/etc/nginx/mime.types:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro # SSL certificates
+      - /var/www/certbot:/var/www/certbot:ro # Certbot webroot
     restart: unless-stopped
     networks:
       - app-network
-    # depends_on:
-    # - ceitba-api  # Moved to apps.yml
-    # - ceitba-scheduler
-    # - ceitba-hub
-    # - ceitba-itbapedia
+    depends_on:
+      - ceitba-api # Ensure API starts before nginx
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     logging:
       driver: json-file
       options:
