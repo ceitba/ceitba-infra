@@ -18,6 +18,13 @@ services:
     container_name: ceitba-db
 
   # TODO: Add missing SPAs
+  ceitba-scheduler:
+    extends:
+      file: scheduler/scheduler.yml
+      service: ceitba-scheduler
+    networks:
+      - app-network
+    container_name: ceitba-scheduler
 
   appsmith:
     extends:
