@@ -3,12 +3,17 @@ services:
     image: ghcr.io/ceitba/scheduler:${CEITBA_API_TAG:-latest}
     container_name: ceitba-scheduler
     environment:
-      CEITBA_API_URL: ${CEITBA_API_URL:-http://localhost:3000}
+      CEITBA_API_URL: ${CEITBA_API_URL:-http://localhost:${API_PORT:-3000}}
     ports:
-      - "3000:3001"
-    restart: always
+      - "${SPA_SCHEDULER_PORT:-3001}:3000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/scheduler/health"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${SPA_SCHEDULER_PORT:-3001}/scheduler/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
