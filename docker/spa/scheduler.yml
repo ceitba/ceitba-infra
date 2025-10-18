@@ -1,5 +1,5 @@
 services:
-  scheduler:
+  ceitba-scheduler:
     image: ghcr.io/ceitba/scheduler:${CEITBA_API_TAG:-latest}
     container_name: ceitba-scheduler
     environment:
