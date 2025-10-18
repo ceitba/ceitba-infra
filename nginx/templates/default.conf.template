@@ -76,7 +76,7 @@ server {
         proxy_set_header Connection "";
     }
 
-    Scheduler endpoint
+    # Scheduler endpoint
     location /scheduler {
         limit_req zone=general_limit burst=30 nodelay;
         proxy_pass http://ceitba_scheduler/scheduler;
