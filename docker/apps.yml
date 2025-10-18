@@ -20,7 +20,7 @@ services:
   # TODO: Add missing SPAs
   ceitba-scheduler:
     extends:
-      file: scheduler/scheduler.yml
+      file: spa/scheduler.yml
       service: ceitba-scheduler
     networks:
       - app-network
