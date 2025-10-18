@@ -3,6 +3,7 @@ services:
     image: postgres:16-alpine
     container_name: ceitba-postgres
     environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-ceitba_db}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ceitba_password}
     ports:
@@ -11,7 +12,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB:-ceitba_db}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-ceitba_db}",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
