@@ -1,6 +1,7 @@
 services:
   ceitba-scheduler:
     image: ghcr.io/ceitba/scheduler:${CEITBA_API_TAG:-latest}
+    platform: linux/amd64
     container_name: ceitba-scheduler
     environment:
       CEITBA_API_URL: ${CEITBA_API_URL:-http://localhost:${API_PORT:-3000}}

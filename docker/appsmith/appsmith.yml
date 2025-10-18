@@ -1,6 +1,7 @@
 services:
   appsmith:
     image: appsmith/appsmith-ce:latest
+    platform: linux/amd64
     container_name: appsmith
     ports:
       - "3005:80"
