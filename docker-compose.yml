@@ -6,6 +6,12 @@ services:
       service: caddy
     networks:
       - app-network
+    environment:
+      - DOMAIN=${DOMAIN}
+      - CORS_ORIGIN=${DOMAIN}
+      - ACME_EMAIL=${ACME_EMAIL}
+      - ACME_CA_SERVER=${ACME_CA_SERVER}
+      - TZ=${TZ}
 
   envoy:
     extends:
@@ -13,6 +19,8 @@ services:
       service: envoy
     networks:
       - app-network
+    environment:
+      - CORS_ORIGIN=${DOMAIN}
 
   postgres:
     extends:
@@ -21,6 +29,12 @@ services:
     networks:
       - app-network
     container_name: ceitba-db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - TZ=${TZ}
 
   ceitba-api:
     extends:
@@ -29,6 +43,16 @@ services:
     networks:
       - app-network
     container_name: ceitba-api
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${API_PORT}
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - ITBA_API_TOKEN=${ITBA_API_TOKEN}
+      - ITBA_API_BASE_URL=${ITBA_API_BASE_URL}
+      - ITBA_API_TIMEOUT=${ITBA_API_TIMEOUT}
+      - CEITBA_API_URL=${CEITBA_API_URL}
+      - TZ=${TZ}
 
   ceitba-scheduler:
     extends:
@@ -37,6 +61,9 @@ services:
     networks:
       - app-network
     container_name: ceitba-scheduler
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - TZ=${TZ}
 
   # appsmith:
   #   extends:
