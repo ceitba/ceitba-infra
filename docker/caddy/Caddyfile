@@ -10,11 +10,12 @@
     }
 }
 
-# For production:
-{$DOMAIN:localhost} {
+http://{$DOMAIN:localhost} {
     redir https://{host}{uri} permanent
-# localhost {
-    # HTTP only for localhost development
+}
+
+# For production:
+https://{$DOMAIN:localhost} {
     
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
