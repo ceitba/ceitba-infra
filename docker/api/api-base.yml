@@ -32,14 +32,23 @@ services:
       - ITBA_API_TOKEN=${ITBA_API_TOKEN}
       - ITBA_API_BASE_URL=${ITBA_API_BASE_URL}
       - ITBA_API_TIMEOUT=${ITBA_API_TIMEOUT:-30000}
-    ports:
-      - "${API_PORT:-3000}:${API_PORT:-3000}"
+    expose:
+      - "3000"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${API_PORT:-3000}/health"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/api/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 40s
     depends_on:
       postgres:
         condition: service_healthy

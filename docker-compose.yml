@@ -1,0 +1,64 @@
+
+services:
+  caddy:
+    extends:
+      file: docker/caddy/caddy.yml
+      service: caddy
+    networks:
+      - app-network
+
+  envoy:
+    extends:
+      file: docker/envoy/envoy-service.yml
+      service: envoy
+    networks:
+      - app-network
+
+  postgres:
+    extends:
+      file: docker/api/api-base.yml
+      service: postgres
+    networks:
+      - app-network
+    container_name: ceitba-db
+
+  ceitba-api:
+    extends:
+      file: docker/api/api-base.yml
+      service: ceitba-api-base
+    networks:
+      - app-network
+    container_name: ceitba-api
+
+  ceitba-scheduler:
+    extends:
+      file: docker/spa/scheduler.yml
+      service: ceitba-scheduler
+    networks:
+      - app-network
+    container_name: ceitba-scheduler
+
+  appsmith:
+    extends:
+      file: docker/appsmith/appsmith.yml
+      service: appsmith
+    networks:
+      - app-network
+    container_name: appsmith
+    depends_on:
+      - postgres
+
+volumes:
+  caddy-certs:
+    driver: local
+  caddy-config:
+    driver: local
+  caddy-logs:
+    driver: local
+  appsmith_data:
+  postgres_data:
+    driver: local
+
+networks:
+  app-network:
+    external: true

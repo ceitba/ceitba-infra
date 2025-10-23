@@ -1,0 +1,38 @@
+services:
+  caddy:
+    image: caddy:2.7-alpine
+    container_name: ceitba-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - TZ=${TZ:-UTC}
+    volumes:
+      - ../caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      
+      - caddy-certs:/data
+      - caddy-config:/config
+      
+      - caddy-logs:/var/log/caddy
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "caddy", "healthcheck", "--config", "/etc/caddy/Caddyfile"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
+
+volumes:
+  caddy-certs:
+    driver: local
+  caddy-config:
+    driver: local
+  caddy-logs:
+    driver: local

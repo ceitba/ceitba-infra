@@ -1,0 +1,27 @@
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.28-latest
+    container_name: ceitba-envoy
+    restart: unless-stopped
+    command: ["/usr/local/bin/envoy", "-c", "/etc/envoy/envoy.yaml", "--service-cluster", "ceitba", "--service-node", "ceitba-node"]
+    ports:
+      - "9901:9901"  # Admin interface
+    volumes:
+      - ../envoy/envoy-config.yml:/etc/envoy/envoy.yaml:ro
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9901/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "10"
+    depends_on:
+      - ceitba-api
+      - ceitba-scheduler
+      - appsmith

@@ -3,10 +3,9 @@ services:
     image: appsmith/appsmith-ce:latest
     platform: linux/amd64
     container_name: appsmith
-    ports:
-      - "3005:80"
+    expose:
+      - "80"
     environment:
-      - APPSMITH_DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       - APPSMITH_ENCRYPTION_PASSWORD=${APPSMITH_ENCRYPTION_PASSWORD}
       - APPSMITH_ENCRYPTION_SALT=${APPSMITH_ENCRYPTION_SALT}
       - APPSMITH_INSTANCE_NAME=${APPSMITH_INSTANCE_NAME:-CEITBA}

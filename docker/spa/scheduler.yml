@@ -1,20 +1,10 @@
 services:
   ceitba-scheduler:
-    image: ghcr.io/ceitba/scheduler:${CEITBA_API_TAG:-latest}
+    image: ghcr.io/ceitba/scheduler:${CEITBA_SCHEDULER_TAG:-latest}
     platform: linux/amd64
     container_name: ceitba-scheduler
     environment:
-      CEITBA_API_URL: ${CEITBA_API_URL:-http://localhost:${API_PORT:-3000}}
-    ports:
-      - "${SPA_SCHEDULER_PORT:-3001}:3000"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-f",
-          "http://localhost:${SPA_SCHEDULER_PORT:-3001}/scheduler/health",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      CEITBA_API_URL: ${CEITBA_API_URL:-https://localhost}
+    expose:
+      - "3000"
+    restart: unless-stopped
