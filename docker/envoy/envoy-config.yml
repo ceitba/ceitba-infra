@@ -27,6 +27,7 @@ static_resources:
                   prefix: "/scheduler"
                 route:
                   cluster: ceitba_scheduler
+                  prefix_rewrite: "/"
               # Appsmith routes
               # - match:
               #     prefix: "/appsmith"
