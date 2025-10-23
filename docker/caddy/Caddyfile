@@ -12,7 +12,7 @@
 
 # For production:
 {$DOMAIN:localhost} {
-    # redir https://{host}{uri} permanent
+    redir https://{host}{uri} permanent
 # localhost {
     # HTTP only for localhost development
     
@@ -25,8 +25,8 @@
         Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
         Content-Security-Policy "default-src 'self' http: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; style-src 'self' 'unsafe-inline' http: https:; img-src 'self' data: http: https:; font-src 'self' data: http: https:; connect-src 'self' http: https: wss:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
         
-        # CORS headers
-        Access-Control-Allow-Origin "https://localhost"
+        # CORS headers - Dynamic from environment
+        Access-Control-Allow-Origin "https://{$CORS_ORIGIN:localhost}"
         Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
         Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-API-Version"
         Access-Control-Allow-Credentials "true"
