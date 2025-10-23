@@ -38,15 +38,15 @@ services:
       - app-network
     container_name: ceitba-scheduler
 
-  appsmith:
-    extends:
-      file: docker/appsmith/appsmith.yml
-      service: appsmith
-    networks:
-      - app-network
-    container_name: appsmith
-    depends_on:
-      - postgres
+  # appsmith:
+  #   extends:
+  #     file: docker/appsmith/appsmith.yml
+  #     service: appsmith
+  #   networks:
+  #     - app-network
+  #   container_name: appsmith
+  #   depends_on:
+  #     - postgres
 
 volumes:
   caddy-certs:

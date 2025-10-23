@@ -1,6 +1,7 @@
 {
-    email {$ACME_EMAIL:admin@ceitba.com}
+    email {$ACME_EMAIL:ceitba@ceitba.org.ar}
     acme_ca {$ACME_CA_SERVER:https://acme-v02.api.letsencrypt.org/directory}
+
     
     log {
         output file /var/log/caddy/access.log
@@ -9,8 +10,11 @@
     }
 }
 
+# For production:
 {$DOMAIN:localhost} {
-    redir https://{host}{uri} permanent
+    # redir https://{host}{uri} permanent
+# localhost {
+    # HTTP only for localhost development
     
     header {
         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -19,7 +23,14 @@
         X-XSS-Protection "1; mode=block"
         Referrer-Policy "strict-origin-when-cross-origin"
         Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
-        Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+        Content-Security-Policy "default-src 'self' http: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; style-src 'self' 'unsafe-inline' http: https:; img-src 'self' data: http: https:; font-src 'self' data: http: https:; connect-src 'self' http: https: wss:; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+        
+        # CORS headers
+        Access-Control-Allow-Origin "https://localhost"
+        Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-API-Version"
+        Access-Control-Allow-Credentials "true"
+        Access-Control-Max-Age "3600"
         
         -Server
         
