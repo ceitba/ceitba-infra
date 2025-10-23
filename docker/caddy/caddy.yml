@@ -8,12 +8,15 @@ services:
       - "443:443"
     environment:
       - TZ=${TZ:-UTC}
+      - DOMAIN=ceitba.org.ar
+      - ACME_EMAIL=ceitba@ceitba.org.ar
+      - CORS_ORIGIN=ceitba.org.ar
     volumes:
       - ../caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      
+
       - caddy-certs:/data
       - caddy-config:/config
-      
+
       - caddy-logs:/var/log/caddy
     networks:
       - app-network
