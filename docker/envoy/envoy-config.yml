@@ -35,9 +35,8 @@ static_resources:
                         # Default route (TEMP, in the future set the hub SPA)
                         - match:
                             prefix: "/"
-                          redirect:
-                            path_redirect: "/api/health"
-                            https_redirect: false
+                          route:
+                            cluster: ceitba_hub
                 http_filters:
                   - name: envoy.filters.http.cors
                     typed_config:
@@ -75,6 +74,19 @@ static_resources:
                   address:
                     socket_address:
                       address: ceitba-scheduler
+                      port_value: 3000
+    - name: ceitba_hub
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: ceitba_hub
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ceitba-hub
                       port_value: 3000
 
 admin:

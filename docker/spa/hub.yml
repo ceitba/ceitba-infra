@@ -1,0 +1,10 @@
+services:
+  ceitba-hub:
+    image: ghcr.io/ceitba/ceitba-hub:${CEITBA_HUB_TAG:-latest}
+    platform: linux/amd64
+    container_name: ceitba-hub
+    environment:
+      NEXT_PUBLIC_CEITBA_API_URL: ${NEXT_PUBLIC_CEITBA_API_URL}
+    expose:
+      - "3000"
+    restart: unless-stopped

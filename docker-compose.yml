@@ -65,6 +65,17 @@ services:
       - NEXT_PUBLIC_CEITBA_API_URL=${NEXT_PUBLIC_CEITBA_API_URL}
       - TZ=${TZ}
 
+  ceitba-hub:
+    extends:
+      file: docker/spa/hub.yml
+      service: ceitba-hub
+    networks:
+      - app-network
+    container_name: ceitba-hub
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - NEXT_PUBLIC_CEITBA_API_URL=${NEXT_PUBLIC_CEITBA_API_URL}
+      - TZ=${TZ}
   # appsmith:
   #   extends:
   #     file: docker/appsmith/appsmith.yml
