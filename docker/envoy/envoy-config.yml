@@ -27,17 +27,17 @@ static_resources:
                             prefix: "/scheduler"
                           route:
                             cluster: ceitba_scheduler
-                      # Appsmith routes
-                      # - match:
-                      #     prefix: "/appsmith"
-                      #   route:
-                      #     cluster: appsmith
-                      # Default route (TEMP, in the future set the hub SPA)
-                      # - match:
-                      #     prefix: "/"
-                      #   redirect:
-                      #     path_redirect: "/api/docs"
-                      #     https_redirect: false
+                        # Appsmith routes
+                        # - match:
+                        #     prefix: "/appsmith"
+                        #   route:
+                        #     cluster: appsmith
+                        # Default route (TEMP, in the future set the hub SPA)
+                        - match:
+                            prefix: "/"
+                          redirect:
+                            path_redirect: "/api/health"
+                            https_redirect: false
                 http_filters:
                   - name: envoy.filters.http.cors
                     typed_config:
