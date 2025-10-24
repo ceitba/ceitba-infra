@@ -62,7 +62,7 @@ services:
     container_name: ceitba-scheduler
     environment:
       - NODE_ENV=${NODE_ENV}
-      - CEITBA_API_URL=${CEITBA_API_URL}
+      - NEXT_PUBLIC_CEITBA_API_URL=${NEXT_PUBLIC_CEITBA_API_URL}
       - TZ=${TZ}
 
   # appsmith:

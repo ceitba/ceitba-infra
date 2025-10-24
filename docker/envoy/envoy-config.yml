@@ -1,82 +1,81 @@
 static_resources:
   listeners:
-  - name: listener_0
-    address:
-      socket_address:
-        address: 0.0.0.0
-        port_value: 8080
-    filter_chains:
-    - filters:
-      - name: envoy.filters.network.http_connection_manager
-        typed_config:
-          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-          stat_prefix: ingress_http
-          route_config:
-            name: local_route
-            virtual_hosts:
-            - name: api_service
-              domains: ["*"]
-              routes:
-              # API routes
-              - match:
-                  prefix: "/api"
-                route:
-                  cluster: ceitba_api
-              # Scheduler routes
-              - match:
-                  prefix: "/scheduler"
-                route:
-                  cluster: ceitba_scheduler
-                  prefix_rewrite: "/"
-              # Appsmith routes
-              # - match:
-              #     prefix: "/appsmith"
-              #   route:
-              #     cluster: appsmith
-              # Default route (TEMP, in the future set the hub SPA)
-              - match:
-                  prefix: "/"
-                redirect:
-                  path_redirect: "/api/docs"
-                  https_redirect: false
-          http_filters:
-          - name: envoy.filters.http.cors
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
-          - name: envoy.filters.http.router
-            typed_config:
-              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+    - name: listener_0
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8080
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: api_service
+                      domains: ["*"]
+                      routes:
+                        # API routes
+                        - match:
+                            prefix: "/api"
+                          route:
+                            cluster: ceitba_api
+                        # Scheduler routes
+                        - match:
+                            prefix: "/scheduler"
+                          route:
+                            cluster: ceitba_scheduler
+                      # Appsmith routes
+                      # - match:
+                      #     prefix: "/appsmith"
+                      #   route:
+                      #     cluster: appsmith
+                      # Default route (TEMP, in the future set the hub SPA)
+                      # - match:
+                      #     prefix: "/"
+                      #   redirect:
+                      #     path_redirect: "/api/docs"
+                      #     https_redirect: false
+                http_filters:
+                  - name: envoy.filters.http.cors
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.cors.v3.Cors
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
 
   clusters:
-  # API cluster
-  - name: ceitba_api
-    connect_timeout: 5s
-    type: LOGICAL_DNS
-    lb_policy: ROUND_ROBIN
-    load_assignment:
-      cluster_name: ceitba_api
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: ceitba-api
-                port_value: 3000
+    # API cluster
+    - name: ceitba_api
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: ceitba_api
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ceitba-api
+                      port_value: 3000
 
-  # Scheduler cluster
-  - name: ceitba_scheduler
-    connect_timeout: 5s
-    type: LOGICAL_DNS
-    lb_policy: ROUND_ROBIN
-    load_assignment:
-      cluster_name: ceitba_scheduler
-      endpoints:
-      - lb_endpoints:
-        - endpoint:
-            address:
-              socket_address:
-                address: ceitba-scheduler
-                port_value: 3000
+    # Scheduler cluster
+    - name: ceitba_scheduler
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: ceitba_scheduler
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ceitba-scheduler
+                      port_value: 3000
 
 admin:
   address:
